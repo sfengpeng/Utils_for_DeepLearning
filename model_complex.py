@@ -47,10 +47,16 @@ def cal_fps(model, input_data, num_iters=100):
     
     torch.cuda.synchronize()  # 确保所有GPU同步
     end_time = time.time()
-
     # 计算FPS
     total_time = end_time - start_time
     fps = num_iters * batch_size / total_time  # FPS = total frames / total time
+
+    if args.rank == 0:
+        print(f"Total Samples: {total_samples}, Total Time: {total_time:.2f}s")
+        print(f"FPS: {fps:.2f}")
+
+    dist.destroy_process_group()
+
     return fps
       
 
